@@ -1,4 +1,4 @@
-function Greet(namesGreeted){
+export default function Greet(namesGreeted){
 
     var state = namesGreeted || {
         count: 0 
