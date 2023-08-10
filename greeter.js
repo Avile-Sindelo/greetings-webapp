@@ -71,7 +71,7 @@ export default function Greet(namesGreeted){
 
         for(let greeter in peopleGreetedObj){
             let currentPersonObj = {};
-            currentPersonObj['name'] = greeter;
+            currentPersonObj['name'] = greeter[0].toUpperCase() + greeter.slice(1);
             currentPersonObj['numberOfTimes'] = peopleGreetedObj[greeter];
 
             peopleGreetedArr.push(currentPersonObj);
@@ -87,9 +87,24 @@ export default function Greet(namesGreeted){
        return onlyPeopleArr;
     }
 
+    function greetedHowManyTimes(name){
+        //loop through the greeted personnel
+        let greetedCitizens = greetedPersonnel();
+        let counter = 0;
+
+        for(let i = 0; i < greetedCitizens.length; i++){
+            if(greetedCitizens[i].name == name){
+                counter = greetedCitizens[i].numberOfTimes;
+            }
+        }
+        
+        return counter;
+    }
+
     return {
         greetMe,
         getState,
-        greetedPersonnel
+        greetedPersonnel,
+        greetedHowManyTimes
     }
 }

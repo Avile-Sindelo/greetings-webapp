@@ -45,15 +45,17 @@ app.post('/greet', function(req, res){
 
 app.get('/greeted', function(req, res){
   //display all the users that have been greeted
-  console.log(greet.greetedPersonnel());
-
-  res.render('greetedPeople', {people: greet.greetedPersonnel});
+  res.render('greetedPeople', {people: greet.greetedPersonnel()});
   // Add a link from the "/greeted page" - where you can click on a user in the list to see how many time the user has been greeted.
 });
 
 app.get('/counter/:username', function(req, res){
   //show how many times a user has been greeted
   // Display a message like this: Hello, <USER_NAME> has been greeted <COUNTER> times.
+  const username = req.params.username;
+  console.log(username);
+
+  res.render('greetedUser', {username: username, count: greet.greetedHowManyTimes(username)})
 });
 
 let PORT = process.env.PORT || 4000;
