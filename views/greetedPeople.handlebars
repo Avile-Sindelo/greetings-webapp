@@ -1,0 +1,18 @@
+<form action="/greeted" method="GET" id="greetedPeopleForm">
+
+<h2>Greeted People</h2>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Number of times greeted</th>
+        </tr>
+        {{#each people}}
+        <tr>
+            <td>{{name}}</td>
+            <td>{{numberOfTimes}}</td>
+        </tr>
+        {{/each}} 
+    </table>
+
+    <button type="submit" > View greeted people </button>
+</form>

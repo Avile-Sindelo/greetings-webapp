@@ -1,37 +1,8 @@
 export default function Greet(namesGreeted){
 
     var state = namesGreeted || {
-        count: 0 
-    }
-
-    function domErrorHandling(nameInput, checkedRadio, greetMessage){
-        if(nameInput.value === '' && checkedRadio === null){
-            greetMessage.innerHTML = 'Please provide both the name to greet, and the language to greet with';
-            setTimeout(clearMessage, 3000);
-            //Return true to signify there was an error
-            return true;
-       } else if(nameInput.value === ''){
-            greetMessage.innerHTML = 'Please provide a name for the function to greet';
-            setTimeout(clearMessage, 3000);
-            //clear the language input
-            for(let i = 0; i < radios.length; i++){
-                if(radios[i].checked){
-                    radios[i].checked = false;
-                }   
-            }
-            //Return true to signify there was an error
-            return true; 
-
-        } else if(checkedRadio === null){
-            greetMessage.innerHTML = 'Please select a language to greet with';
-            setTimeout(clearMessage, 3000);
-            //clear the input field
-            nameInput.value = ''; 
-            //Return true to signify there was an error
-            return true;
-        }
-        //Return false when there was no error
-        return false;
+        count: 0,
+        message: ''
     }
 
     function greetMe(name, language){
@@ -40,6 +11,7 @@ export default function Greet(namesGreeted){
         //make sure a name has been provided
         if(name == ''){
             message = 'Please provide a name for the function to greet';
+            state.message = message;
             return message;
         } else {
             var pattern = /^[a-zA-Z\s]+$/;
@@ -51,12 +23,16 @@ export default function Greet(namesGreeted){
                     //handle language
                     if(language == 'english'){
                         message = 'Hello, ' + nameSmallCase[0].toUpperCase() + nameSmallCase.slice(1);
+                        state.message = message;
                     } else if(language == 'afrikaans'){
                         message = 'Halo, ' + nameSmallCase[0].toUpperCase() + nameSmallCase.slice(1);
+                        state.message = message;
                     } else if(language == 'xhosa'){
                         message = 'Molo, ' + nameSmallCase[0].toUpperCase() + nameSmallCase.slice(1);
+                        state.message = message;
                     } else {
                         message = 'Please make sure you select a language to greet with';
+                        state.message = message;
                         return message;
                     }
                     //create a property of that name and assign a value of how many times the name has been greeted, 1
@@ -68,10 +44,12 @@ export default function Greet(namesGreeted){
                     state[nameSmallCase]++;
                     //when the name has been greeted before
                     message = nameSmallCase[0].toUpperCase() + nameSmallCase.slice(1) + ' has already been greeted!';
+                    state.message = message;
                 }
             } else {
                 //Invalid name
                 message = 'Please enter a valid name';
+                state.message = message;
                 return message;
             }
         }
@@ -84,9 +62,34 @@ export default function Greet(namesGreeted){
         return state;
     }
 
+    function greetedPersonnel(){
+        let peopleGreetedObj = getState();
+        let peopleGreetedArr = [];
+        let onlyPeopleArr = [];
+
+        //loop over the object and make an array of objects for each key-value pair on the returned object
+
+        for(let greeter in peopleGreetedObj){
+            let currentPersonObj = {};
+            currentPersonObj['name'] = greeter;
+            currentPersonObj['numberOfTimes'] = peopleGreetedObj[greeter];
+
+            peopleGreetedArr.push(currentPersonObj);
+        
+        }
+        
+
+        //loop over the newly created array and remove the COUNT and MESSAGE properties
+        for(let i = 2; i < peopleGreetedArr.length; i++){
+            onlyPeopleArr.push(peopleGreetedArr[i]);
+        }
+
+       return onlyPeopleArr;
+    }
+
     return {
         greetMe,
         getState,
-        domErrorHandling
+        greetedPersonnel
     }
 }
