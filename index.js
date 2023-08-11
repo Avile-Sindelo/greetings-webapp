@@ -6,6 +6,7 @@ import flash from 'express-flash';
 import session from 'express-session';
 
 const app = express();
+const greet = Greet();
 
 app.engine('handlebars', engine());
 app.set('view engine', 'handlebars');
@@ -14,6 +15,7 @@ app.set('views', './views');
 app.use(express.static('public'));
 
 app.use(bodyParser.urlencoded({ extended: false }));
+
 app.use(session({
   secret: "<add a secret string here>",
   resave: false,
@@ -22,7 +24,7 @@ app.use(session({
 
 app.use(flash());
 
-const greet = Greet();
+
 //console.log(greet.greetedPersonnel());
 
 app.get('/', function(req, res){
