@@ -1,7 +1,8 @@
 <form id="container" action="/greet" method="POST">
     <div class="greeting-section">
         <h2 class="greeting-header"> Greetings! </h2>
-        <p class="greet-message">{{message}}</p>
+        <p class="error-message">{{greetState.errorMessage}}</p>
+        
         <legend>
             <label for="name"> Name </label>
             <input type="text" value="" id="name-input" name="name">
@@ -11,6 +12,8 @@
             <input type="radio" class="radio-language" value="afrikaans" name="language" id="radio-afrikaans"> Afrikaans </input>
             <input type="radio" class="radio-language" value="xhosa" name="language" id="radio-xhosa"> Xhosa </input>
         </div>
+        
+        <p class="greet-message">{{message}}</p>
         <button id="greet-btn" type="submit"> Greet Me! </button>
         
         {{!-- <button id="reset">Reset</button> --}}

@@ -91,6 +91,11 @@ th,td {
 
 .greet-message{
     font-size: 1.2rem;
+    color: black;
+}
+
+.error-message{
+    font-size: 1.2rem;
     color: crimson;
 }
 

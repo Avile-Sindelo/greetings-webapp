@@ -2,17 +2,22 @@ export default function Greet(namesGreeted){
 
     var state = namesGreeted || {
         count: 0,
-        message: ''
+        message: '',
+        errorMessage: ''
     }
 
     function greetMe(name, language){
+        //clear the previous message of the state variable
+        state.errorMessage = '';
+        state.message = '';
         //message variable for the greeting text
         var message = '';
         //make sure a name has been provided
         if(name == ''){
             message = 'Please provide a name for the function to greet';
-            state.message = message;
-            return message;
+            state.errorMessage = message;
+            
+            return state.errorMessage;
         } else {
             var pattern = /^[a-zA-Z\s]+$/;
             if(pattern.test(name)){
@@ -24,16 +29,20 @@ export default function Greet(namesGreeted){
                     if(language == 'english'){
                         message = 'Hello, ' + nameSmallCase[0].toUpperCase() + nameSmallCase.slice(1);
                         state.message = message;
+                        
                     } else if(language == 'afrikaans'){
                         message = 'Halo, ' + nameSmallCase[0].toUpperCase() + nameSmallCase.slice(1);
                         state.message = message;
+                       
                     } else if(language == 'xhosa'){
                         message = 'Molo, ' + nameSmallCase[0].toUpperCase() + nameSmallCase.slice(1);
                         state.message = message;
+                       
                     } else {
-                        message = 'Please make sure you select a language to greet with';
-                        state.message = message;
-                        return message;
+                        message = 'Please make sure you select a language to greet with'
+                        state.errorMessage = message;
+                        
+                        return state.errorMessage;
                     }
                     //create a property of that name and assign a value of how many times the name has been greeted, 1
                     state[nameSmallCase] = 1;
@@ -49,13 +58,13 @@ export default function Greet(namesGreeted){
             } else {
                 //Invalid name
                 message = 'Please enter a valid name';
-                state.message = message;
-                return message;
+                state.errorMessage = message;
+                
+                return state.errorMessage;
             }
         }
 
-        return message;
-        
+        return state.message == ''? state.errorMessage : state.message;
     }
 
     function getState(){
@@ -80,7 +89,7 @@ export default function Greet(namesGreeted){
         
 
         //loop over the newly created array and remove the COUNT and MESSAGE properties
-        for(let i = 2; i < peopleGreetedArr.length; i++){
+        for(let i = 3; i < peopleGreetedArr.length; i++){
             onlyPeopleArr.push(peopleGreetedArr[i]);
         }
 
