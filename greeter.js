@@ -3,7 +3,7 @@ export default function Greet(namesGreeted){
     var state = namesGreeted || {
         count: 0,
         message: '',
-        errorMessage: ''
+        errorMessage: '',
     }
 
     function greetMe(name, language){

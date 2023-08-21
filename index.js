@@ -4,9 +4,15 @@ import bodyParser from 'body-parser';
 import { engine } from 'express-handlebars';
 import flash from 'express-flash';
 import session from 'express-session';
+import pgp from 'pg-promise';
+import Database from './database.js';
 
 const app = express();
 const greet = Greet();
+const database = Database();
+const connectionString = process.env.DATABASE_URL || 'postgres://greetings_webapp_db_user:lywbHJbpiW2UKTy0xApdsDDD15vuLsEn@dpg-cjdk77rbq8nc739r9u20-a/greetings_webapp_db';
+const postgresP = pgp();
+const db = postgresP(connectionString);
 
 app.engine('handlebars', engine());
 app.set('view engine', 'handlebars');
@@ -17,21 +23,31 @@ app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(session({
-  secret: "<add a secret string here>",
+  secret : "<add a secret string here>",
   resave: false,
   saveUninitialized: true
 }));
 
+// initialise the flash middleware
 app.use(flash());
 
 
 //console.log(greet.greetedPersonnel());
 
-app.get('/', function(req, res){
-  // console.log(greet.getState())
+// app.get('/', function(req, res){
+//   // console.log(greet.getState())
+//   req.flash('info', 'Welcome');
+//   res.render('index', {greetState: greet.getState(), message: greet.getState().message});
+// });
+
+db.manyOrNone(database.viewGreetedPeople, []).catch(err => console.log(err));
+
+app.get('/', function (req, res) {
   req.flash('info', 'Welcome');
-  res.render('index', {greetState: greet.getState(), message: greet.getState().message});
+  
+  res.render('index', {greetState: greet.getState(), message: greet.getState().message})
 });
+
 
 app.post('/greet', function(req, res){
   //extract the name and language from the request object
@@ -39,6 +55,8 @@ app.post('/greet', function(req, res){
   let language = req.body.language;
   //Greet the user using the factory function
   greet.greetMe(name, language);
+  //Populate the database
+
   //Use flash to display the message
   req.flash('info', greet.getState().message)
   //Go back to the home route
