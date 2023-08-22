@@ -9,10 +9,11 @@ import Database from './database.js';
 
 const app = express();
 const greet = Greet();
-const database = Database();
+
 const connectionString = process.env.DATABASE_URL || 'postgres://greetings_webapp_db_user:lywbHJbpiW2UKTy0xApdsDDD15vuLsEn@dpg-cjdk77rbq8nc739r9u20-a/greetings_webapp_db';
 const postgresP = pgp();
 const db = postgresP(connectionString);
+const database = Database(db);
 
 app.engine('handlebars', engine());
 app.set('view engine', 'handlebars');
@@ -31,17 +32,6 @@ app.use(session({
 // initialise the flash middleware
 app.use(flash());
 
-
-//console.log(greet.greetedPersonnel());
-
-// app.get('/', function(req, res){
-//   // console.log(greet.getState())
-//   req.flash('info', 'Welcome');
-//   res.render('index', {greetState: greet.getState(), message: greet.getState().message});
-// });
-
-db.manyOrNone(database.viewGreetedPeople, []).catch(err => console.log(err));
-
 app.get('/', function (req, res) {
   req.flash('info', 'Welcome');
   
@@ -56,7 +46,9 @@ app.post('/greet', function(req, res){
   //Greet the user using the factory function
   greet.greetMe(name, language);
   //Populate the database
-
+  console.log('Check here')
+  database.addPerson(name, /*number of times*/greet.greetedHowManyTimes(name));
+  console.log(greet.greetedHowManyTimes(name));
   //Use flash to display the message
   req.flash('info', greet.getState().message)
   //Go back to the home route
@@ -66,6 +58,8 @@ app.post('/greet', function(req, res){
 app.get('/greeted', function(req, res){
   //display all the users that have been greeted
   res.render('greetedPeople', {people: greet.greetedPersonnel()});
+  //Get the greeted people from the database
+  console.log(database.viewGreetedPeople());
   // Add a link from the "/greeted page" - where you can click on a user in the list to see how many time the user has been greeted.
 });
 
