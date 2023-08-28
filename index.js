@@ -10,7 +10,7 @@ import Database from './database.js';
 const app = express();
 const greet = Greet();
 
-const connectionString = process.env.DATABASE_URL || 'postgres://greetings_webapp_db_user:lywbHJbpiW2UKTy0xApdsDDD15vuLsEn@dpg-cjdk77rbq8nc739r9u20-a/greetings_webapp_db';
+const connectionString = process.env.DATABASE_URL || 'postgres://greetings_webapp_db_user:lywbHJbpiW2UKTy0xApdsDDD15vuLsEn@dpg-cjdk77rbq8nc739r9u20-a.oregon-postgres.render.com/greetings_webapp_db?ssl=true';
 const postgresP = pgp();
 const db = postgresP(connectionString);
 const database = Database(db);
@@ -32,10 +32,29 @@ app.use(session({
 // initialise the flash middleware
 app.use(flash());
 
+let indexDetails = {
+  greetState: greet.getState(), 
+  message: greet.getState().message, 
+  counter: 0,
+  duplicate: false
+};
+
+database.globalCounter()
+  .then(result => {
+    //Success 
+    // console.log('The Global Count: ', result);
+    indexDetails.counter = result.count;
+    console.log('Counter from the index details : ', indexDetails.counter);
+  })
+  .catch(error => {
+    //Error
+    console.log(error);
+});
+
 app.get('/', function (req, res) {
   req.flash('info', 'Welcome');
-  
-  res.render('index', {greetState: greet.getState(), message: greet.getState().message})
+
+  res.render('index', indexDetails)
 });
 
 
@@ -43,14 +62,27 @@ app.post('/greet', function(req, res){
   //extract the name and language from the request object
   let name = req.body.name;
   let language = req.body.language;
+ 
   //Greet the user using the factory function
-  greet.greetMe(name, language);
-  //Populate the database
-  console.log('Check here')
-  database.addPerson(name, /*number of times*/greet.greetedHowManyTimes(name));
-  console.log(greet.greetedHowManyTimes(name));
+  greet.greetMe(name, language);  
+
+  database.duplicate(name)
+          .then(result => {
+            //Success
+            console.log('Duplicate status: ', result);
+            if(result){
+              //Duplicate
+              database.updatePersonCounter(name);
+            } else {
+              //Not a duplicate
+              database.addPerson(name, greet.greetedHowManyTimes(name));
+            }
+          })
+          .catch(err => console.log(err));
+   
   //Use flash to display the message
   req.flash('info', greet.getState().message)
+  
   //Go back to the home route
   res.redirect('/');
 });

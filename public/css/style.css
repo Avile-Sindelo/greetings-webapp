@@ -27,7 +27,11 @@ th,td {
 }
 
 #greetedUser{
-    color: khaki;
+    color: darkcyan;
+    background-color: #98D8AA;
+    text-align: center;
+    padding: 3% 5%;
+    font-size: 110%;
 }
 
 #container{
@@ -107,6 +111,28 @@ th,td {
 .greet-reset{
     color: black;
     font-size: 1.3rem;
+}
+
+#greetedPeopleBtn{
+    padding: 2% 5%;
+    background-color: cornflowerblue;
+    color: white;
+    margin: 0 0 0 40%;
+}
+
+#greetedPeopleBtn{
+    padding: 2% 5%;
+    margin: -40% 0 0 37%;
+    background-color: darkcyan;
+    color: beige;
+    border-radius: 10px;
+    border: 1px solid white;
+}
+
+#greetedPeopleBtn:hover{
+    background-color: beige;
+    color: darkcyan;
+    border: 1px solid darkcyan;
 }
 
 #reset{

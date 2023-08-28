@@ -18,11 +18,31 @@ export default function Database(db){
                     `, [name]
                     );
     }
+
+    async function duplicate(name){
+        let personCount = await db.oneOrNone('select count(*) from greeted where name=$1', [name]); 
+        console.log('The person has been greeted : '+ personCount.count+ ' times');
+        if(personCount.count > 0){
+            return true;
+        } else {
+          return false;  
+        }   
+    }
+
+    async function globalCounter(){
+        let countGlobal = await db.one('select count(*) from greeted');
+        return countGlobal;
+    }
     
     return {
         addPerson,
         viewGreetedPeople,
         deletePerson,
-        updatePersonCounter
+        updatePersonCounter,
+        duplicate,
+        globalCounter
     }
 }
+
+
+   
