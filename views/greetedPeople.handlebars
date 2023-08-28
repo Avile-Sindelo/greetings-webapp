@@ -2,13 +2,11 @@
     <h2>Greeted People</h2>
     <table>
         <tr>
-            <th>Name</th>
-            <th>Number of times greeted</th>
+            <th>Names</th>
         </tr>
         {{#each people}}
         <tr>
-            <td><a href="/counter/{{name}}">{{name}}</a></td>
-            <td>{{numberOfTimes}}</td>
+            <td><a href="/counter/{{name}}">{{people.name}}</a></td>
         </tr>
         {{/each}} 
     </table>

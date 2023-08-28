@@ -41,10 +41,8 @@ let indexDetails = {
 
 database.globalCounter()
   .then(result => {
-    //Success 
-    // console.log('The Global Count: ', result);
+    //Success
     indexDetails.counter = result.count;
-    console.log('Counter from the index details : ', indexDetails.counter);
   })
   .catch(error => {
     //Error
@@ -69,7 +67,6 @@ app.post('/greet', function(req, res){
   database.duplicate(name)
           .then(result => {
             //Success
-            console.log('Duplicate status: ', result);
             if(result){
               //Duplicate
               database.updatePersonCounter(name);
@@ -88,10 +85,27 @@ app.post('/greet', function(req, res){
 });
 
 app.get('/greeted', function(req, res){
+  let greetedPersonnelList = [];
+
+  //get the greeted people from the database
+  database.viewGreetedPeople()
+          .then(result => {
+            result.filter(user => {
+              let greetee = {}
+              greetee['name'] = user.name;
+              greetee['numberOfTimes'] = user.number_of_times;
+
+              greetedPersonnelList.push(greetee);
+              
+            });
+  
+            console.log(greetedPersonnelList);
+            return greetedPersonnelList;
+          })
+          .catch(error => console.log(error))
   //display all the users that have been greeted
-  res.render('greetedPeople', {people: greet.greetedPersonnel()});
-  //Get the greeted people from the database
-  console.log(database.viewGreetedPeople());
+  res.render('greetedPeople', {people: greetedPersonnelList});
+  
   // Add a link from the "/greeted page" - where you can click on a user in the list to see how many time the user has been greeted.
 });
 
@@ -99,12 +113,21 @@ app.get('/counter/:username', function(req, res){
   //show how many times a user has been greeted
   // Display a message like this: Hello, <USER_NAME> has been greeted <COUNTER> times.
   const username = req.params.username;
+  let personCount = 100;
 
-  res.render('greetedUser', {username: username, count: greet.greetedHowManyTimes(username)})
+  database.individualUserCount(username)
+          .then(result => {
+            personCount = result.number_of_times;
+            console.log(personCount);
+          })
+          .catch(err => console.log(err));
+          
+          console.log(personCount);
+  res.render('greetedUser', {username: username, count: personCount});
 });
 
 let PORT = process.env.PORT || 4000;
 
 app.listen(PORT, function(){
-  console.log('Server started on port : ', PORT);
-});
+  console.log('Server started on port : ', PORT); 
+}); 

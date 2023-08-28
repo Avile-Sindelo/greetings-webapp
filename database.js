@@ -14,7 +14,7 @@ export default function Database(db){
 
     async function updatePersonCounter(name){
         await db.none(`UPDATE greeted 
-                        SET number_of_times = number_of_times + 1
+                        SET number_of_times = number_of_times + 1 where name=$1
                     `, [name]
                     );
     }
@@ -33,6 +33,11 @@ export default function Database(db){
         let countGlobal = await db.one('select count(*) from greeted');
         return countGlobal;
     }
+
+    async function individualUserCount(username){
+        let loneCount = db.oneOrNone('select number_of_times from greeted where name=$1', [username])
+        return loneCount;
+    }
     
     return {
         addPerson,
@@ -40,7 +45,8 @@ export default function Database(db){
         deletePerson,
         updatePersonCounter,
         duplicate,
-        globalCounter
+        globalCounter,
+        individualUserCount
     }
 }
 
