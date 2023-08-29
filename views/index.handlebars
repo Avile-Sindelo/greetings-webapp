@@ -1,30 +1,32 @@
-<form id="container" action="/greet" method="POST">
-    <div class="greeting-section">
-        <h2 class="greeting-header"> Greetings! </h2>
-        <p class="error-message">{{greetState.errorMessage}}</p>
-        
-        <legend>
-            <label for="name"> Name </label>
-            <input type="text" value="" id="name-input" name="name">
-        </legend>
-        <div class="language-radios">
-            <input type="radio" class="radio-language" value="english" name="language" id="radio-english"> English </input>
-            <input type="radio" class="radio-language" value="afrikaans" name="language" id="radio-afrikaans"> Afrikaans </input>
-            <input type="radio" class="radio-language" value="xhosa" name="language" id="radio-xhosa"> Xhosa </input>
+<div id="container">
+    <form  action="/greet" method="POST">
+        <div class="greeting-section">
+            <h2 class="greeting-header"> Greetings! </h2>
+            <p class="error-message">{{greetState.errorMessage}}</p>
+            
+            <legend>
+                <label for="name"> Name </label>
+                <input type="text" value="" id="name-input" name="name">
+            </legend>
+            <div class="language-radios">
+                <input type="radio" class="radio-language" value="english" name="language" id="radio-english"> English </input>
+                <input type="radio" class="radio-language" value="afrikaans" name="language" id="radio-afrikaans"> Afrikaans </input>
+                <input type="radio" class="radio-language" value="xhosa" name="language" id="radio-xhosa"> Xhosa </input>
+            </div>
+            
+            <p class="greet-message">{{greetState.message}}</p>
+            <button id="greet-btn" type="submit"> Greet Me! </button>
+            
+            {{!-- <button id="reset">Reset</button> --}}
         </div>
         
-        <p class="greet-message">{{greetState.message}}</p>
-        <button id="greet-btn" type="submit"> Greet Me! </button>
-        
-        {{!-- <button id="reset">Reset</button> --}}
-    </div>
-    
 
-    <div class="greeting-counter"> 
-        <h1 class="counter"> {{counter}} </h1>
-    </div>
-</form>
+        <div class="greeting-counter"> 
+            <h1 class="counter"> {{counter}} </h1>
+        </div>
+    </form>
 
-<form method="GET" action="/greeted">
-    <button type="submit" id="greetedPeopleBtn">View Greeted Personnel</button>
-</form>
+    <form method="GET" action="/greeted">
+        <button type="submit" id="greetedPeopleBtn">View Greeted Personnel</button>
+    </form>
+</div>

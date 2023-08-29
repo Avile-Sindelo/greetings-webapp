@@ -6,8 +6,12 @@
         </tr>
         {{#each people}}
         <tr>
-            <td><a href="/counter/{{name}}">{{people.name}}</a></td>
+            <td><a href="/counter/{{name}}">{{name}}</a></td>
         </tr>
         {{/each}} 
     </table>
 </div>
+
+<form method="GET" action="/">
+    <button type="submit" class="back-to-home">Home</button>
+</form>

@@ -102,10 +102,15 @@ app.get('/greeted', function(req, res){
             console.log(greetedPersonnelList);
             return greetedPersonnelList;
           })
-          .catch(error => console.log(error))
-  //display all the users that have been greeted
-  res.render('greetedPeople', {people: greetedPersonnelList});
-  
+          .catch(error => {
+            console.log(error);
+            //display all the users that have been greeted
+            
+
+          })
+          console.log('greeted people from the db :', greetedPersonnelList)
+  res.render('greetedPeople', {people: greet.greetedPersonnel() /* or [] */});
+  //res.render('greetedPeople', {people: greetedPersonnelList});
   // Add a link from the "/greeted page" - where you can click on a user in the list to see how many time the user has been greeted.
 });
 
@@ -113,7 +118,7 @@ app.get('/counter/:username', function(req, res){
   //show how many times a user has been greeted
   // Display a message like this: Hello, <USER_NAME> has been greeted <COUNTER> times.
   const username = req.params.username;
-  let personCount = 100;
+  let personCount = 0;
 
   database.individualUserCount(username)
           .then(result => {
