@@ -32,31 +32,31 @@ app.use(session({
 // initialise the flash middleware
 app.use(flash());
 
-let indexDetails = {
-  greetState: greet.getState(), 
-  message: greet.getState().message, 
-  counter: 0,
-  duplicate: false
-};
+// database.globalCounter()
+//   .then(result => {
+//     //Success
+//     indexDetails.counter = result.count;
+//   })
+//   .catch(error => {
+//     //Error
+//     console.log(error);
+// });
 
-database.globalCounter()
-  .then(result => {
-    //Success
-    indexDetails.counter = result.count;
-  })
-  .catch(error => {
-    //Error
-    console.log(error);
-});
-
-app.get('/', function (req, res) {
+app.get('/', async function (req, res) {
   req.flash('info', 'Welcome');
 
-  res.render('index', indexDetails)
+  let globalCountDb = await database.globalCounter();
+
+  res.render('index', {
+    greetState: greet.getState(), 
+    message: greet.getState().message, 
+    counter: globalCountDb.count,
+    duplicate: false,
+  })
 });
 
 
-app.post('/greet', function(req, res){
+app.post('/greet',async  function(req, res){
   //extract the name and language from the request object
   let name = req.body.name;
   let language = req.body.language;
@@ -64,18 +64,15 @@ app.post('/greet', function(req, res){
   //Greet the user using the factory function
   greet.greetMe(name, language);  
 
-  database.duplicate(name)
-          .then(result => {
-            //Success
-            if(result){
-              //Duplicate
-              database.updatePersonCounter(name);
-            } else {
-              //Not a duplicate
-              database.addPerson(name, greet.greetedHowManyTimes(name));
-            }
-          })
-          .catch(err => console.log(err));
+  let dupl = await database.duplicate(name);
+
+  if(dupl.count > 0){
+    //Duplicate
+    database.updatePersonCounter(name);
+  } else {
+    //Not a duplicate
+    database.addPerson(name, greet.greetedHowManyTimes(name));
+  }
    
   //Use flash to display the message
   req.flash('info', greet.getState().message)
@@ -84,52 +81,28 @@ app.post('/greet', function(req, res){
   res.redirect('/');
 });
 
-app.get('/greeted', function(req, res){
-  let greetedPersonnelList = [];
+app.get('/greeted', async function(req, res){
+  const dbGreetedPeople = await database.viewGreetedPeople();
+    
+  res.render('greetedPeople', {people: dbGreetedPeople});
 
-  //get the greeted people from the database
-  database.viewGreetedPeople()
-          .then(result => {
-            result.filter(user => {
-              let greetee = {}
-              greetee['name'] = user.name;
-              greetee['numberOfTimes'] = user.number_of_times;
-
-              greetedPersonnelList.push(greetee);
-              
-            });
-  
-            console.log(greetedPersonnelList);
-            return greetedPersonnelList;
-          })
-          .catch(error => {
-            console.log(error);
-            //display all the users that have been greeted
-            
-
-          })
-          console.log('greeted people from the db :', greetedPersonnelList)
-  res.render('greetedPeople', {people: greet.greetedPersonnel() /* or [] */});
-  //res.render('greetedPeople', {people: greetedPersonnelList});
   // Add a link from the "/greeted page" - where you can click on a user in the list to see how many time the user has been greeted.
 });
 
-app.get('/counter/:username', function(req, res){
+app.get('/counter/:username', async function(req, res){
   //show how many times a user has been greeted
-  // Display a message like this: Hello, <USER_NAME> has been greeted <COUNTER> times.
+  
   const username = req.params.username;
-  let personCount = 0;
 
-  database.individualUserCount(username)
-          .then(result => {
-            personCount = result.number_of_times;
-            console.log(personCount);
-          })
-          .catch(err => console.log(err));
-          
-          console.log(personCount);
-  res.render('greetedUser', {username: username, count: personCount});
+  const personCount = await database.individualUserCount(username);
+  res.render('greetedUser', {username: username, count: personCount.number_of_times});
 });
+
+app.get('/reset', async function(req, res){
+  //await database.reset();
+  console.log('You are about to delete the greeted people');
+  res.redirect('/')
+})
 
 let PORT = process.env.PORT || 4000;
 

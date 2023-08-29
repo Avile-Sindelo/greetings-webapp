@@ -21,12 +21,8 @@ export default function Database(db){
 
     async function duplicate(name){
         let personCount = await db.oneOrNone('select count(*) from greeted where name=$1', [name]); 
-        console.log('The person has been greeted : '+ personCount.count+ ' times');
-        if(personCount.count > 0){
-            return true;
-        } else {
-          return false;  
-        }   
+     
+        return personCount;
     }
 
     async function globalCounter(){
@@ -38,6 +34,10 @@ export default function Database(db){
         let loneCount = db.oneOrNone('select number_of_times from greeted where name=$1', [username])
         return loneCount;
     }
+
+    async function reset(){
+        db.none('delete from greeted');
+    }
     
     return {
         addPerson,
@@ -46,7 +46,8 @@ export default function Database(db){
         updatePersonCounter,
         duplicate,
         globalCounter,
-        individualUserCount
+        individualUserCount,
+        reset
     }
 }
 

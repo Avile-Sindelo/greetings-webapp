@@ -39,7 +39,7 @@ th,td {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin: 10% 15%;
+    margin: 5% 15%;
     padding: 5% 15%;
     color: whitesmoke;
     text-shadow: 1px 1px 1px #333;
@@ -143,12 +143,27 @@ th,td {
 
 #greetedPeopleBtn{
     padding: 3% 15%;
-    margin: 100% 0 0 50%;
+    margin: 60% 0 0 50%;
     background-color: darkcyan;
     color: beige;
     border-radius: 5px;
     border: 1px solid white;
     font-weight: 600;
+}
+
+#reset-table-btn{
+    background-color: crimson;
+    color: #fff;
+    padding: 20% 50%;
+    margin: 200% 0 0 300%;
+    border: 1px solid #fff;
+    border-radius: 2px;
+}
+
+#reset-table-btn:hover{
+    background-color: #fff;
+    color: crimson;
+    border: 1px solid crimson;
 }
 
 #greetedPeopleBtn:hover{
