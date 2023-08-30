@@ -99,8 +99,11 @@ app.get('/counter/:username', async function(req, res){
 });
 
 app.get('/reset', async function(req, res){
-  console.log('Table cleared');
-  await database.reset();
+  console.log(req.body.confirmation);
+  // let shouldReset = confirm('Are you sure you want to reset the app? ');
+  // if(shouldReset){
+  //   await database.reset();
+  // }
   
   res.redirect('/');
 })
