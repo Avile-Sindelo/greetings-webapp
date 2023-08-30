@@ -1,6 +1,6 @@
 export default function Database(db){
     async function viewGreetedPeople(){
-        let people = await db.manyOrNone("SELECT * FROM greeted");
+        let people = await db.manyOrNone("SELECT * FROM greeted"); 
         return people;
     }
 
@@ -36,7 +36,9 @@ export default function Database(db){
     }
 
     async function reset(){
-        db.none('delete from greeted');
+        let message = 'Table contents deleted';
+        await db.none('delete from greeted');
+        return message;
     }
     
     return {

@@ -14,7 +14,7 @@
                 <input type="radio" class="radio-language" value="xhosa" name="language" id="radio-xhosa"> Xhosa </input>
             </div>
             
-            <p class="greet-message">{{greetState.message}}</p>
+            <p class="greet-message">{{message}}</p>
             <button id="greet-btn" type="submit"> Greet Me! </button>
             
             {{!-- <button id="reset">Reset</button> --}}
@@ -34,3 +34,17 @@
         <button type="submit" id="reset-table-btn">Reset</button>
     </form>
 </div>
+
+
+    <script>
+        window.onload = function() {
+            const flashMessage = document.querySelecor('.greet-message');
+        
+            if (flashMessage) {
+                setTimeout(function() {
+                flashMessage.style.display = 'none';
+                }, 3000); // 3 seconds
+            }
+        };
+  </script>
+

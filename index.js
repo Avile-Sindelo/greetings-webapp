@@ -24,7 +24,7 @@ app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(session({
-  secret : "<add a secret string here>",
+  secret : "add a secret string here",
   resave: false,
   saveUninitialized: true
 }));
@@ -43,7 +43,7 @@ app.use(flash());
 // });
 
 app.get('/', async function (req, res) {
-  req.flash('info', 'Welcome');
+  req.flash('info', 'This is a flas message');
 
   let globalCountDb = await database.globalCounter();
 
@@ -99,9 +99,10 @@ app.get('/counter/:username', async function(req, res){
 });
 
 app.get('/reset', async function(req, res){
-  //await database.reset();
-  console.log('You are about to delete the greeted people');
-  res.redirect('/')
+  console.log('Table cleared');
+  await database.reset();
+  
+  res.redirect('/');
 })
 
 let PORT = process.env.PORT || 4000;
