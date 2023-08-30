@@ -66,12 +66,15 @@ app.post('/greet',async  function(req, res){
 
   let dupl = await database.duplicate(name);
 
-  if(dupl.count > 0){
+  if(dupl.count > 0 && greet.getState().errorMessage == ''){
     //Duplicate
     database.updatePersonCounter(name);
   } else {
     //Not a duplicate
+    if(greet.getState().errorMessage == ''){
     database.addPerson(name, greet.greetedHowManyTimes(name));
+    }
+    
   }
    
   //Use flash to display the message
@@ -99,10 +102,10 @@ app.get('/counter/:username', async function(req, res){
 });
 
 app.get('/reset', async function(req, res){
-  console.log(req.body.confirmation);
+  console.log(req.body);
   // let shouldReset = confirm('Are you sure you want to reset the app? ');
   // if(shouldReset){
-  //   await database.reset();
+   await database.reset();
   // }
   
   res.redirect('/');

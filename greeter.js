@@ -13,8 +13,8 @@ export default function Greet(namesGreeted){
         //message variable for the greeting text
         var message = '';
         //make sure a name has been provided
-        if(name == ''){
-            message = 'Please provide a name for the function to greet';
+        if(!name || !language){
+            message = 'Please provide both a name and language for the function to greet';
             state.errorMessage = message;
             
             return state.errorMessage;
