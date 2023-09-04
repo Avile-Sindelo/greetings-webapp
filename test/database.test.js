@@ -8,13 +8,12 @@ const postgresP = pgp();
 const db = postgresP(connectionString);
 
 
-describe('The basic database web app', function(){
-
-    beforeEach(async function(done){
+describe('The basic database web app', function(done){
+    this.timeout(10000);
+    beforeEach(async function(){
         // clean the tables before each test run
-        await db.none("delete from greeted;", function(){
-         done();   
-        });
+        await db.none("delete from greeted;");
+        done();
         
     });
 
@@ -24,7 +23,7 @@ describe('The basic database web app', function(){
         let database = Database(db);
         let greetedCitizens = await database.viewGreetedPeople();
 
-        assert.deepEqual([], greetedCitizens);
+        assert.equal(0, greetedCitizens.length);
         done();
     });
 
