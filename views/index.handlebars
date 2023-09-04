@@ -30,7 +30,7 @@
         <button type="submit" id="greetedPeopleBtn">View Greeted Personnel</button>
     </form>
 
-    <form method="GET" action="/reset" onsubmit="resetConfirm()">
+    <form method="POST" action="/reset" onsubmit="resetConfirm()">
         <button type="submit" id="reset-table-btn">Reset</button>
     </form>
 </div>
@@ -55,7 +55,7 @@
         };
 
         function resetConfirm(){
-            return confirm('Are you sure you want to reset the app? ');
+            return alert('You have just deleted all the previously greeted people ');
         }
   </script>
 

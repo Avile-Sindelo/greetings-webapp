@@ -32,16 +32,6 @@ app.use(session({
 // initialise the flash middleware
 app.use(flash());
 
-// database.globalCounter()
-//   .then(result => {
-//     //Success
-//     indexDetails.counter = result.count;
-//   })
-//   .catch(error => {
-//     //Error
-//     console.log(error);
-// });
-
 app.get('/', async function (req, res) {
   req.flash('info', 'This is a flas message');
 
@@ -101,13 +91,10 @@ app.get('/counter/:username', async function(req, res){
   res.render('greetedUser', {username: username, count: personCount.number_of_times});
 });
 
-app.get('/reset', async function(req, res){
-  console.log(req.body);
-  // let shouldReset = confirm('Are you sure you want to reset the app? ');
-  // if(shouldReset){
-   await database.reset();
-  // }
-  
+app.post('/reset', async function(req, res){
+
+  await database.reset();
+
   res.redirect('/');
 })
 

@@ -10,9 +10,12 @@ const db = postgresP(connectionString);
 
 describe('The basic database web app', function(){
 
-    beforeEach(async function(){
+    beforeEach(async function(done){
         // clean the tables before each test run
-        await db.none("delete from greeted;");
+        await db.none("delete from greeted;", function(){
+         done();   
+        });
+        
     });
 
     it('should pass the db test', async function(){
@@ -22,7 +25,7 @@ describe('The basic database web app', function(){
         let greetedCitizens = await database.viewGreetedPeople();
 
         assert.deepEqual([], greetedCitizens);
-
+        done();
     });
 
     after(function(){
