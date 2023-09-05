@@ -101,7 +101,8 @@ app.get('/counter/:username', async function(req, res){
 app.post('/reset', async function(req, res){
 
   await database.reset();
-
+  greet.getState().message = '';
+  greet.getState().errorMessage = '';
   res.redirect('/');
 })
 
