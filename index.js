@@ -46,9 +46,10 @@ app.get('/', async function (req, res) {
 });
 
 
-app.post('/greet',async  function(req, res){
+app.post('/greet', async function(req, res){
   //extract the name and language from the request object
-  let name = req.body.name;
+  let requestName = req.body.name.toLowerCase();
+  let name = requestName[0].toUpperCase() + requestName.slice(1)  
   let language = req.body.language;
  
   //Greet the user using the factory function
@@ -64,7 +65,6 @@ app.post('/greet',async  function(req, res){
     if(greet.getState().errorMessage == ''){
     database.addPerson(name, greet.greetedHowManyTimes(name));
     }
-    
   }
    
   //Use flash to display the message
