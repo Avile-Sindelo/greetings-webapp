@@ -57,9 +57,6 @@ describe('The basic database web app', function(){
         await database.addPerson('Alpha', 4);
         await database.addPerson('Bravo', 2);
         await database.addPerson('Charlie', 1);
-        
-        //check if the values above are reflected
-       // assert.deepEqual({count: 3}, await database.globalCounter())
        
         //delete one person from the database table
         await database.deletePerson('Bravo')
