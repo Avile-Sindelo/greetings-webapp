@@ -33,7 +33,7 @@ app.use(session({
 app.use(flash());
 
 app.get('/', async function (req, res) {
-  req.flash('info', 'This is a flas message');
+  req.flash('info', 'This is a flash message');
 
   let globalCountDb = await database.globalCounter();
 
@@ -47,31 +47,38 @@ app.get('/', async function (req, res) {
 
 
 app.post('/greet', async function(req, res){
-  //extract the name and language from the request object
-  let requestName = req.body.name.toLowerCase();
-  let name = requestName[0].toUpperCase() + requestName.slice(1)  
-  let language = req.body.language;
- 
-  //Greet the user using the factory function
-  greet.greetMe(name, language);  
-
-  let dupl = await database.duplicate(name);
-
-  if(dupl.count > 0 && greet.getState().errorMessage == ''){
-    //Duplicate
-    database.updatePersonCounter(name);
-  } else {
-    //Not a duplicate
-    if(greet.getState().errorMessage == ''){
-    database.addPerson(name, greet.greetedHowManyTimes(name));
-    }
-  }
-   
-  //Use flash to display the message
-  req.flash('info', greet.getState().message)
   
-  //Go back to the home route
-  res.redirect('/');
+  if(req.body.name && req.body.language){
+    //extract the name and language from the request object
+    let requestName = req.body.name.toLowerCase();
+    let name = requestName[0].toUpperCase() + requestName.slice(1); 
+    let language = req.body.language;
+    
+    //Greet the user using the factory function
+    greet.greetMe(name, language);  
+    
+    let dupl = await database.duplicate(name);
+    
+    if(dupl.count > 0 && greet.getState().errorMessage == ''){
+      //Duplicate
+      database.updatePersonCounter(name);
+    } else {
+      //Not a duplicate
+      if(greet.getState().errorMessage == ''){
+        database.addPerson(name, greet.greetedHowManyTimes(name));
+      }
+    }
+    
+    //Use flash to display the message
+    req.flash('info', greet.getState().message)
+    
+    //Go back to the home route
+    res.redirect('/');
+  } else {
+    greet.getState().errorMessage = 'Please enter both name and language';
+    greet.getState().message = '';
+    res.redirect('/');
+  }
 });
 
 app.get('/greeted', async function(req, res){
