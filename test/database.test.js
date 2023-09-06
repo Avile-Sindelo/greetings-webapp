@@ -25,7 +25,7 @@ describe('The basic database web app', function(){
 
         assert.equal(1, greetedCitizens.length);
     });
-    
+     
     it('should test whether or not the added person is a duplicate', async function(){
         
         // the Factory Function is called Database
