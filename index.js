@@ -74,8 +74,17 @@ app.post('/greet', async function(req, res){
     
     //Go back to the home route
     res.redirect('/');
-  } else {
-    greet.getState().errorMessage = 'Please enter both name and language';
+  } else if(!req.body.name && !req.body.language){
+    greet.getState().errorMessage = 'Please enter both the name and the language';
+    greet.getState().message = '';
+    res.redirect('/');
+  } else if(!req.body.name){
+
+    greet.getState().errorMessage = 'Please enter a name';
+    greet.getState().message = '';
+    res.redirect('/');
+  } else if(!req.body.language){
+    greet.getState().errorMessage = 'Please select a language';
     greet.getState().message = '';
     res.redirect('/');
   }
